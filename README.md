@@ -8,6 +8,10 @@ Please review the information in this section before you get started with your d
 * Implement your solution and the rest of git basics applies.
 * When you are ready, submit for review by providing the link of your forked repo to our recruitment team.
 
+<!-- How run the project -->
+* Node version 14.16.1 is required.
+* npm i
+* npm start
 ### Requirements:
 * Use TypeScript and React to build the application.
 * Use any CSS framework or libraries (e.g., Bootstrap, Material-UI) to style your components.

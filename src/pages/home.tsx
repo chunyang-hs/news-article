@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
-import "../mock/newsList";
 
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import { INewListItem } from "../interface";
@@ -10,18 +9,34 @@ const Home = () => {
   const [newsList, setNewsList] = useState<INewListItem[]>([]);
   const navigate = useNavigate();
 
+  const getList = () => {
+    axios.get("http://127.0.0.1:9630/list").then((res) => {
+      setNewsList(res.data.data);
+    });
+  };
+
   const goCreate = () => {
-    navigate("/create",{state:{runType:'add'}});
+    navigate("/create", { state: { runType: "add" } });
   };
 
   const updateArticle = (item: INewListItem) => {
-    navigate("/create",{state:{item,runType:'update'}});
+    navigate("/create", { state: { item, runType: "update" } });
+  };
+
+  const deleteArticle = (id: number) => {
+    axios
+      .delete(`http://127.0.0.1:9630/delete`, {
+        data: {id },
+      })
+      .then((res) => {
+        if (res.data.code === 200) {
+          getList();
+        }
+      });
   };
 
   useEffect(() => {
-    axios.get("/api/news").then((res) => {
-      setNewsList(res.data.data);
-    });
+    getList();
   }, []);
 
   return (
@@ -43,7 +58,7 @@ const Home = () => {
                 color="text.secondary"
                 gutterBottom
               >
-                {item.date}
+                {item.date?.slice(0, 10)}
               </Typography>
               <Typography variant="h5" component="div">
                 {item.title}
@@ -52,14 +67,24 @@ const Home = () => {
                 {item.publisher}
               </Typography>
               <Typography variant="body2">
-                {item.summaries?.map((item, index) => {
-                  return <li key={index}>{item}</li>;
-                })}
+                <li>{item.summary}</li>
               </Typography>
             </CardContent>
+
+            <Button
+              variant="outlined"
+              color="error"
+              style={{ marginBottom: 10, float: "right", marginRight: 10 }}
+              onClick={() => {
+                deleteArticle(item.id);
+              }}
+            >
+              Delete
+            </Button>
+
             <Button
               variant="contained"
-              style={{ marginBottom: 10, float: "right" ,marginRight:10}}
+              style={{ marginBottom: 10, float: "right", marginRight: 10 }}
               onClick={() => {
                 updateArticle(item);
               }}

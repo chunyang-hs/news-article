@@ -1,7 +1,7 @@
 export interface INewListItem {
-  id:string
+  id: number;
   title?: string;
-  summaries?: string[];
+  summary?: string;
   publisher?: string;
   date?: string;
 }
